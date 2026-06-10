@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: admin-test
+  namespace: security-lab
+spec:
+  serviceAccountName: admin
+  containers:
+  - name: test
+    image: alpine
+    command: ["sleep","3600"]

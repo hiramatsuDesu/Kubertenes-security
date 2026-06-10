@@ -1,0 +1,15 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+
+metadata:
+  name: audit-binding
+
+subjects:
+  - kind: ServiceAccount
+    name: audit
+    namespace: security-lab
+
+roleRef:
+  kind: ClusterRole
+  name: audit-role
+  apiGroup: rbac.authorization.k8s.io

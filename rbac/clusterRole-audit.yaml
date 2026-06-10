@@ -1,0 +1,35 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: audit-role
+
+rules:
+
+- apiGroups: [""]
+  resources:
+    - pods
+    - services
+    - namespaces
+    - nodes
+  verbs:
+    - get
+    - list
+    - watch
+
+- apiGroups: ["apps"]
+  resources:
+    - deployments
+    - statefulsets
+    - replicasets
+  verbs:
+    - get
+    - list
+    - watch
+
+- apiGroups: ["metrics.k8s.io"]
+  resources:
+    - pods
+    - nodes
+  verbs:
+    - get
+    - list

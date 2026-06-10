@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vault-agent-template
+  namespace: security-lab
+
+data:
+  admin.ctmpl: |
+    username = "{{ with secret "secret/data/admin" }}{{ .Data.data.username }}{{ end }}"
+    password = "{{ with secret "secret/data/admin" }}{{ .Data.data.password }}{{ end }}"

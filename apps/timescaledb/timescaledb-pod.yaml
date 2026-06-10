@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: timescaledb
+  namespace: security-lab
+spec:
+  serviceAccountName: timescaledb
+
+  volumes:
+    - name: vault-secrets
+      emptyDir: {}
+
+    - name: vault-config
+      configMap:
+        name: vault-agent-timescale
+
+    - name: vault-template
+      configMap:
+        name: vault-agent-timescale-template
+
+  containers:
+
+    - name: db
+      image: postgres:16
+      command: ["sh", "-c"]
+      args:
+        - |
+          echo "waiting for secrets..."
+          sleep 10
+          export $(cat /vault/secrets/db.env | xargs)
+          exec docker-entrypoint.sh postgres
+      env:
+        - name: POSTGRES_DB
+          value: appdb
+      volumeMounts:
+        - name: vault-secrets
+          mountPath: /vault/secrets
+
+    - name: vault-agent
+      image: hashicorp/vault:1.19
+      command: ["vault", "agent", "-config=/etc/vault/vault-agent.hcl"]
+      volumeMounts:
+        - name: vault-config
+          mountPath: /etc/vault
+        - name: vault-template
+          mountPath: /etc/vault/template
+        - name: vault-secrets
+          mountPath: /vault/secrets

@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vault-agent-timescale-template
+  namespace: security-lab
+
+data:
+  db.ctmpl: |
+    POSTGRES_USER={{ with secret "secret/data/timescaledb" }}{{ .Data.data.username }}{{ end }}
+    POSTGRES_PASSWORD={{ with secret "secret/data/timescaledb" }}{{ .Data.data.password }}{{ end }}
